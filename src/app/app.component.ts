@@ -7,7 +7,7 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'new-app';
-  selected = "shopping-list"
+  selected = "recipes"
 
   onNavigate(event:any){
    this.selected = event
