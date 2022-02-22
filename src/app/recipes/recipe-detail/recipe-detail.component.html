@@ -1,34 +1,43 @@
 <div class="row">
   <div class="col-xs-12">
-    <img src="" alt="">
+    <img src="" alt="" />
   </div>
 </div>
 <div class="row">
   <div class="col-xs-12">
-    <h1>{{recipe?.name}}</h1>
+    <h1>{{ recipe?.name }}</h1>
   </div>
-
 </div>
 <div class="row">
   <div class="col-xs-12">
-    <div class="btn-group">
-      <button type="button" class="btn btn-primary dropdown-toggle"> manage recipe <span class="caret"></span></button>
-      <ul class="dropdown-menu">
-        <li>teee</li>
-        <li>tes</li>
+    <div class="dropdown">
+      <button
+        class="btn btn-secondary dropdown-toggle"
+        appDropdown
+        #r="appDropdown"
+        type="button"
+        id="dropdownMenuButton1"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
+      >
+        Dropdown button
+      </button>
+      <ul
+        class="dropdown-menu"
+        [ngClass]="{ show: r.isOpen }"
+        aria-labelledby="dropdownMenuButton1"
+      >
+        <li><a class="dropdown-item" href="#">Action</a></li>
+        <li><a class="dropdown-item" href="#">Another action</a></li>
+        <li><a class="dropdown-item" href="#">Something else here</a></li>
       </ul>
     </div>
   </div>
-
 </div>
 <div class="row">
-  <div class="col-12">
-    dec {{recipe?.name}}
-  </div>
+  <div class="col-12">dec {{ recipe?.name }}</div>
 </div>
 
 <div class="row">
-  <div class="col-12">
-    Ingredients
-  </div>
+  <div class="col-12">Ingredients</div>
 </div>
