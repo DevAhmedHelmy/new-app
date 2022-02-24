@@ -27,7 +27,14 @@
         [ngClass]="{ show: r.isOpen }"
         aria-labelledby="dropdownMenuButton1"
       >
-        <li><a class="dropdown-item" href="#">Action</a></li>
+        <li>
+          <a
+            class="dropdown-item"
+            style="cursor: pointer"
+            (click)="onAddToShoppingList()"
+            >AddToShoppingList
+          </a>
+        </li>
         <li><a class="dropdown-item" href="#">Another action</a></li>
         <li><a class="dropdown-item" href="#">Something else here</a></li>
       </ul>
@@ -39,5 +46,12 @@
 </div>
 
 <div class="row">
-  <div class="col-12">Ingredients</div>
+  <div class="col-12">
+    <ul class="list-group">
+      <li class="list-group-item" *ngFor="let ingredient of recipe.ingredients">
+        {{ ingredient.name }}
+        {{ ingredient.amount }}
+      </li>
+    </ul>
+  </div>
 </div>
