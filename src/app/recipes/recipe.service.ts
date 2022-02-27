@@ -5,8 +5,6 @@ import { Subject } from 'rxjs';
 import { Recipe } from './recipe.model';
 @Injectable()
 export class RecipeService {
-  recipeSelected = new Subject<Recipe>();
-
   recipes: Recipe[] = [
     new Recipe('testing', 'testing', 'testing', [
       new Ingredient('meat', 1),
