@@ -33,4 +33,8 @@ export class ShoppingListService {
   getIngreient(index: number): Ingredient {
     return this.ingredients[index];
   }
+  deleteIngreient(index: number) {
+    this.ingredients.splice(index, 1);
+    this.ingredientChanged.next(this.ingredients.slice());
+  }
 }

@@ -31,4 +31,9 @@ export class RecipeService {
   addIngredientToShoppingList(ingredients: Ingredient[]) {
     this.shoppingListService.addIngreients(ingredients);
   }
+
+  addRecipe(data: Recipe) {
+    this.recipes.push(data);
+    console.log(this.recipes);
+  }
 }
