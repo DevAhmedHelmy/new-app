@@ -1,8 +1,10 @@
+import { EventEmitter } from '@angular/core';
 import { Ingredient } from 'app/shared/ingredient.model';
 import { Subject } from 'rxjs';
 
 export class ShoppingListService {
   ingredientChanged = new Subject<Ingredient[]>();
+  startEditing = new Subject<number>();
   ingredients: Ingredient[] = [
     new Ingredient('ingredient', 5),
     new Ingredient('ingredient2', 6),
@@ -17,9 +19,18 @@ export class ShoppingListService {
     this.ingredients.push(ingredient);
     this.ingredientChanged.next(this.ingredients.slice());
   }
+  updateIngreient(index: number, data: Ingredient) {
+    const selectItem = this.getIngreient(index);
+    selectItem.name = data.name;
+    selectItem.amount = data.amount;
+    return this.getIngreient(index);
+  }
   addIngreients(ingredients: Ingredient[]) {
     this.ingredients.push(...ingredients);
     console.log(this.ingredients.slice());
     this.ingredientChanged.next(this.ingredients.slice());
+  }
+  getIngreient(index: number): Ingredient {
+    return this.ingredients[index];
   }
 }
