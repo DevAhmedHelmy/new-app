@@ -28,15 +28,31 @@
         aria-labelledby="dropdownMenuButton1"
       >
         <li>
-          <a
+          <button
+            type="button"
             class="dropdown-item"
             style="cursor: pointer"
             (click)="onAddToShoppingList()"
-            >AddToShoppingList
-          </a>
+          >
+            AddToShoppingList
+          </button>
         </li>
-        <li><a class="dropdown-item" (click)="onEditRecipe()" style="cursor: pointer;">edit recipe</a></li>
-        <li><a class="dropdown-item" style="cursor: pointer;">Something else here</a></li>
+        <li>
+          <a
+            class="dropdown-item"
+            (click)="onEditRecipe()"
+            style="cursor: pointer"
+            >edit recipe</a
+          >
+        </li>
+        <li>
+          <a
+            class="dropdown-item"
+            (click)="DeleteItem()"
+            style="cursor: pointer"
+            >Delete</a
+          >
+        </li>
       </ul>
     </div>
   </div>

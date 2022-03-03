@@ -1,8 +1,9 @@
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { RecipeService } from '../recipe.service';
+import { Recipe } from '../recipe.model';
 
 @Component({
   selector: 'app-recipe-edit',
@@ -15,7 +16,8 @@ export class RecipeEditComponent implements OnInit {
   recipeForm: FormGroup;
   constructor(
     private route: ActivatedRoute,
-    private recipeSer: RecipeService
+    private recipeSer: RecipeService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -70,7 +72,25 @@ export class RecipeEditComponent implements OnInit {
     );
   }
 
+  onCancel() {
+    this.router.navigate(['../']);
+  }
+  onDeleteIngredient(index: number) {
+    (<FormArray>this.recipeForm.get('ingredients')).removeAt(index);
+  }
+
   onSubmit() {
-    this.recipeSer.addRecipe(this.recipeForm.value);
+    const newRecipe = new Recipe(
+      this.recipeForm.value['name'],
+      this.recipeForm.value['desc'],
+      this.recipeForm.value['imagePath'],
+      this.recipeForm.value['ingredients']
+    );
+    if (this.editMode) {
+      this.recipeSer.updateRecipe(this.id, newRecipe);
+    } else {
+      this.recipeSer.addRecipe(newRecipe);
+    }
+    this.onCancel();
   }
 }
