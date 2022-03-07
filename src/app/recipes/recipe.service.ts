@@ -6,22 +6,14 @@ import { Recipe } from './recipe.model';
 @Injectable()
 export class RecipeService {
   recipesChanaged = new Subject<Recipe[]>();
-  recipes: Recipe[] = [
-    new Recipe('testing', 'testing', 'testing', [
-      new Ingredient('meat', 1),
-      new Ingredient('meat', 2),
-    ]),
-    new Recipe('testing 2', 'testing 2', 'testing 2', [
-      new Ingredient('meat', 1),
-      new Ingredient('meat', 2),
-    ]),
-    new Recipe('testing 3', 'testing 3', 'testing 3', [
-      new Ingredient('meat', 1),
-      new Ingredient('meat', 2),
-    ]),
-  ];
+  recipes: Recipe[] = [];
 
   constructor(private shoppingListService: ShoppingListService) {}
+
+  setRecipes(recipes: Recipe[]) {
+    this.recipes = recipes;
+    this.recipesChanaged.next(this.recipes.slice());
+  }
 
   getRecipes() {
     return this.recipes.slice();
