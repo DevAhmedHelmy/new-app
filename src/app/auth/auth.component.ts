@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import AuthResponseInterface from './interface/auth.response.interface';
 import { AuthService } from './services/auth.service';
@@ -10,7 +11,7 @@ import { AuthService } from './services/auth.service';
   styleUrls: ['./auth.component.css'],
 })
 export class AuthComponent implements OnInit {
-  constructor(private authSer: AuthService) {}
+  constructor(private authSer: AuthService, private router: Router) {}
 
   isLoginMode = true;
   isLoading = false;
@@ -38,6 +39,7 @@ export class AuthComponent implements OnInit {
     authObs.subscribe(
       (res) => {
         this.isLoading = false;
+        this.router.navigate['/recipes'];
       },
       (errorMessage) => {
         this.isLoading = false;

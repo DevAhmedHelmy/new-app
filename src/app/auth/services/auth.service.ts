@@ -1,12 +1,14 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, throwError } from 'rxjs';
+import { catchError, Subject, tap, throwError } from 'rxjs';
 import AuthResponseInterface from '../interface/auth.response.interface';
+import { User } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
+  userData = new Subject<User>();
   constructor(private http: HttpClient) {}
   // signInWithPassword?key=[API_KEY]
   // signUp?key=[API_KEY]
@@ -19,6 +21,14 @@ export class AuthService {
     return this.http.post<AuthResponseInterface>(url, data).pipe(
       catchError((err) => {
         return this.handleError(err);
+      }),
+      tap((resData) => {
+        this.handelAuthData(
+          resData.email,
+          resData.localId,
+          resData.idToken,
+          resData.expiresIn
+        );
       })
     );
   }
@@ -29,6 +39,14 @@ export class AuthService {
     return this.http.post<AuthResponseInterface>(url, data).pipe(
       catchError((err) => {
         return this.handleError(err);
+      }),
+      tap((resData) => {
+        this.handelAuthData(
+          resData.email,
+          resData.localId,
+          resData.idToken,
+          resData.expiresIn
+        );
       })
     );
   }
@@ -55,5 +73,16 @@ export class AuthService {
         break;
     }
     return throwError(errorMessage);
+  }
+
+  private handelAuthData(
+    email: string,
+    localId: string,
+    idToken: string,
+    expiresIn: string
+  ) {
+    const expireDate = new Date(new Date().getTime() + +expiresIn * 1000);
+    const user = new User(email, localId, idToken, expireDate);
+    this.userData.next(user);
   }
 }
