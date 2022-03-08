@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, Subject, tap, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, tap, throwError } from 'rxjs';
 import AuthResponseInterface from '../interface/auth.response.interface';
 import { User } from '../models/user.model';
 
@@ -8,7 +8,7 @@ import { User } from '../models/user.model';
   providedIn: 'root',
 })
 export class AuthService {
-  userData = new Subject<User>();
+  userData = new BehaviorSubject<User>(null);
   constructor(private http: HttpClient) {}
   // signInWithPassword?key=[API_KEY]
   // signUp?key=[API_KEY]
