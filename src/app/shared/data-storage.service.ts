@@ -25,23 +25,11 @@ export class DataStorageService {
   }
 
   fetchRecipes() {
-    return this.authSer.userData.pipe(
-      take(1),
-      exhaustMap((user) => {
-        return this.http.get<Recipe[]>(`${environment.apiUrl}/recipes.json`, {
-          params: new HttpParams().set('auth', user.token),
-        });
-      }),
-      map((recipes) => {
-        return recipes.map((recipe) => {
-          return { ...recipe, ingredients: recipe.ingredients ?? [] };
-        });
-      }),
-      tap((recipes) => {
-        this.recipeService.setRecipes(recipes);
-      })
-    );
-    // return this.http.get<Recipe[]>(`${environment.apiUrl}/recipes.json`).pipe(
+    // return this.authSer.userData.pipe(
+    //   take(1),
+    //   exhaustMap((user) => {
+    //     return this.http.get<Recipe[]>(`${environment.apiUrl}/recipes.json` );
+    //   }),
     //   map((recipes) => {
     //     return recipes.map((recipe) => {
     //       return { ...recipe, ingredients: recipe.ingredients ?? [] };
@@ -51,5 +39,15 @@ export class DataStorageService {
     //     this.recipeService.setRecipes(recipes);
     //   })
     // );
+    return this.http.get<Recipe[]>(`${environment.apiUrl}/recipes.json`).pipe(
+      map((recipes) => {
+        return recipes.map((recipe) => {
+          return { ...recipe, ingredients: recipe.ingredients ?? [] };
+        });
+      }),
+      tap((recipes) => {
+        this.recipeService.setRecipes(recipes);
+      })
+    );
   }
 }

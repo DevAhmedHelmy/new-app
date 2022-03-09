@@ -8,7 +8,7 @@ import { User } from '../models/user.model';
   providedIn: 'root',
 })
 export class AuthService {
-  userData = new BehaviorSubject<User>(null);
+  user = new BehaviorSubject<User>(null);
   constructor(private http: HttpClient) {}
   // signInWithPassword?key=[API_KEY]
   // signUp?key=[API_KEY]
@@ -38,9 +38,11 @@ export class AuthService {
     const url = `${this.apiUrl}:signInWithPassword?key=${this.key}`;
     return this.http.post<AuthResponseInterface>(url, data).pipe(
       catchError((err) => {
+
         return this.handleError(err);
       }),
       tap((resData) => {
+
         this.handelAuthData(
           resData.email,
           resData.localId,
@@ -49,6 +51,18 @@ export class AuthService {
         );
       })
     );
+  }
+
+  autoLogin(){
+    const userData = JSON.parse(localStorage.getItem('userData'));
+    if(!userData){
+      return;
+    }
+
+    const loadedUser = new User(userData.email,userData.id,userData._token,new Date(userData._taskFactories))
+    if(loadedUser.token){
+      this.user.next(loadedUser);
+    }
   }
 
   private handleError(err: HttpErrorResponse) {
@@ -83,6 +97,12 @@ export class AuthService {
   ) {
     const expireDate = new Date(new Date().getTime() + +expiresIn * 1000);
     const user = new User(email, localId, idToken, expireDate);
-    this.userData.next(user);
+    this.user.next(user);
+    localStorage.setItem('userData',  JSON.stringify(user));
+  }
+
+
+  logout(){
+    this.user.next(null);
   }
 }
