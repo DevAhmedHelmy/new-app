@@ -1,5 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { BehaviorSubject, catchError, tap, throwError } from 'rxjs';
 import AuthResponseInterface from '../interface/auth.response.interface';
 import { User } from '../models/user.model';
@@ -9,7 +10,8 @@ import { User } from '../models/user.model';
 })
 export class AuthService {
   user = new BehaviorSubject<User>(null);
-  constructor(private http: HttpClient) {}
+  private experissonTimeOut: any;
+  constructor(private http: HttpClient, private router: Router) {}
   // signInWithPassword?key=[API_KEY]
   // signUp?key=[API_KEY]
 
@@ -38,11 +40,9 @@ export class AuthService {
     const url = `${this.apiUrl}:signInWithPassword?key=${this.key}`;
     return this.http.post<AuthResponseInterface>(url, data).pipe(
       catchError((err) => {
-
         return this.handleError(err);
       }),
       tap((resData) => {
-
         this.handelAuthData(
           resData.email,
           resData.localId,
@@ -53,24 +53,45 @@ export class AuthService {
     );
   }
 
-  autoLogin(){
+  autoLogin() {
     const userData = JSON.parse(localStorage.getItem('userData'));
-    if(!userData){
+    if (!userData) {
       return;
     }
 
-    const loadedUser = new User(userData.email,userData.id,userData._token,new Date(userData._taskFactories))
-    if(loadedUser.token){
+    const loadedUser = new User(
+      userData.email,
+      userData.id,
+      userData._token,
+      new Date(userData._taskFactories)
+    );
+    if (loadedUser.token) {
       this.user.next(loadedUser);
+      const timeExp =
+        new Date(userData._taskFactories).getTime() - new Date().getTime();
+      this.autoLogout(timeExp);
     }
   }
-
+  logout() {
+    this.user.next(null);
+    this.router.navigate(['/auth']);
+    localStorage.removeItem('userData');
+    if (this.experissonTimeOut) {
+      clearTimeout(this.experissonTimeOut);
+    }
+    this.experissonTimeOut = null;
+  }
+  autoLogout(expireDuration) {
+    this.experissonTimeOut = setTimeout(() => {
+      localStorage.removeItem('userData');
+      this.logout();
+    }, expireDuration);
+  }
   private handleError(err: HttpErrorResponse) {
     let errorMessage = 'A nuknown error';
     if (!err.error || !err.error.error) {
       return throwError(errorMessage);
     }
-    console.log(err.error.error);
 
     switch (err.error.error.message) {
       case 'EMAIL_EXISTS':
@@ -98,11 +119,7 @@ export class AuthService {
     const expireDate = new Date(new Date().getTime() + +expiresIn * 1000);
     const user = new User(email, localId, idToken, expireDate);
     this.user.next(user);
-    localStorage.setItem('userData',  JSON.stringify(user));
-  }
-
-
-  logout(){
-    this.user.next(null);
+    this.autoLogout(+expiresIn * 1000);
+    localStorage.setItem('userData', JSON.stringify(user));
   }
 }

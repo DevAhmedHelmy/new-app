@@ -7,15 +7,13 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { RecipesResolver } from './recipes/recipes.resolver';
 import { AuthComponent } from './auth/auth.component';
+import { AuthGuard } from './auth/guard/auth.guard';
 const routes: Routes = [
   { path: '', redirectTo: 'recipes', pathMatch: 'full' },
   {
-    path: 'shopping-list',
-    component: ShoppingListComponent,
-  },
-  {
     path: 'recipes',
     component: RecipesComponent,
+    canActivate: [AuthGuard],
     children: [
       { path: '', component: RecipeStartComponent },
       { path: 'new', component: RecipeEditComponent },
@@ -30,6 +28,10 @@ const routes: Routes = [
         resolve: [RecipesResolver],
       },
     ],
+  },
+  {
+    path: 'shopping-list',
+    component: ShoppingListComponent,
   },
   { path: 'auth', component: AuthComponent },
 ];
