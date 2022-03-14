@@ -25,8 +25,6 @@ import { RecipesModule } from './recipes/recipes.module';
     DropdownDirective,
     AuthComponent,
     LoadingSpinnerComponent,
-    AlertComponent,
-    PlaceholderDirective,
   ],
   imports: [
     BrowserModule,
