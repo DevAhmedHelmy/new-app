@@ -23,9 +23,10 @@ import { RecipesModule } from './recipes/recipes.module';
     ShoppingListComponent,
     ShoppingEditComponent,
     DropdownDirective,
-
     AuthComponent,
     LoadingSpinnerComponent,
+    AlertComponent,
+    PlaceholderDirective,
   ],
   imports: [
     BrowserModule,
