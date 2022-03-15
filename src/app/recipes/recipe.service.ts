@@ -3,7 +3,7 @@ import { Ingredient } from 'app/shared/ingredient.model';
 import { ShoppingListService } from 'app/shopping-list/shopping-list.service';
 import { Subject } from 'rxjs';
 import { Recipe } from './recipe.model';
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class RecipeService {
   recipesChanaged = new Subject<Recipe[]>();
   recipes: Recipe[] = [];
