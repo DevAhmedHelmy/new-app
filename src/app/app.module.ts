@@ -5,19 +5,12 @@ import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { AuthInterceptorService } from './auth/services/auth-interceptor.service';
-import { RecipesModule } from './recipes/recipes.module';
+
 import { ShoppingListModule } from './shopping-list/shopping-list.module';
 import { AuthModule } from './auth/auth.module';
 @NgModule({
   declarations: [AppComponent, HeaderComponent],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    HttpClientModule,
-    RecipesModule,
-    ShoppingListModule,
-    AuthModule,
-  ],
+  imports: [BrowserModule, AppRoutingModule, HttpClientModule, AuthModule],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,

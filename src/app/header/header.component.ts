@@ -2,7 +2,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AuthService } from 'app/auth/services/auth.service';
 import { DataStorageService } from 'app/shared/data-storage.service';
 import { Subscription } from 'rxjs';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -21,7 +20,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.dataSub = this.authService.user.subscribe((res) => {
       this.isAuth = !!res;
-      console.log(this.isAuth);
     });
   }
 
