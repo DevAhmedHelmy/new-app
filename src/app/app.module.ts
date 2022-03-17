@@ -6,11 +6,18 @@ import { HeaderComponent } from './header/header.component';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { AuthInterceptorService } from './auth/services/auth-interceptor.service';
 
-import { ShoppingListModule } from './shopping-list/shopping-list.module';
+import { StoreModule } from '@ngrx/store';
 import { AuthModule } from './auth/auth.module';
+import { shoppingListReducer } from './shopping-list/store/shopping-list.reducer';
 @NgModule({
   declarations: [AppComponent, HeaderComponent],
-  imports: [BrowserModule, AppRoutingModule, HttpClientModule, AuthModule],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    HttpClientModule,
+    AuthModule,
+    StoreModule.forRoot({ shoppingList: shoppingListReducer }),
+  ],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
