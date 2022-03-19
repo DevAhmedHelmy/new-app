@@ -6,6 +6,9 @@ import AuthResponseInterface from './interface/auth.response.interface';
 import { AuthService } from './services/auth.service';
 import {AlertComponent} from "../shared/alert/alert.component";
 import {PlaceholderDirective} from "../shared/placeholder/placeholder.directive";
+import * as fromApp from '../store/app.reducer'
+import {Store} from "@ngrx/store";
+import * as authActions from './store/auth.actions'
 
 @Component({
   selector: 'app-auth',
@@ -13,7 +16,7 @@ import {PlaceholderDirective} from "../shared/placeholder/placeholder.directive"
   styleUrls: ['./auth.component.css'],
 })
 export class AuthComponent implements OnInit ,OnDestroy{
-  constructor(private authSer: AuthService, private router: Router,private componentFactoryResolver:ComponentFactoryResolver) {}
+  constructor(private authSer: AuthService, private router: Router,private componentFactoryResolver:ComponentFactoryResolver,private store:Store<fromApp.AppState>) {}
 
   isLoginMode = true;
   isLoading = false;
@@ -23,7 +26,15 @@ export class AuthComponent implements OnInit ,OnDestroy{
   onSwitchMode() {
     this.isLoginMode = !this.isLoginMode;
   }
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.store.select('auth').subscribe(authState=>{
+      this.isLoading = authState.loading;
+      this.error = authState.authError
+      if(this.error){
+        this.showErrorAlert(this.error);
+      }
+    })
+  }
 
   onSubmit(form: NgForm) {
     if (!form.valid) {
@@ -36,22 +47,23 @@ export class AuthComponent implements OnInit ,OnDestroy{
     let authObs: Observable<AuthResponseInterface>;
     this.isLoading = true;
     if (this.isLoginMode) {
-
-      authObs = this.authSer.login(data);
+      // authObs = this.authSer.login(data);
+      this.store.dispatch(new authActions.LoginStart({email:data.email,password:data.password}))
     } else {
-      authObs = this.authSer.signUp(data);
+      // authObs = this.authSer.signUp(data);
+      this.store.dispatch(new authActions.SignUpStart({email:data.email,password:data.password}))
     }
-    authObs.subscribe(
-      (res) => {
-        this.isLoading = false;
-        this.router.navigate(['/recipes']);
-      },
-      (errorMessage) => {
-        this.isLoading = false;
-        this.showErrorAlert(errorMessage);
-        this.error = errorMessage;
-      }
-    );
+    // authObs.subscribe(
+    //   (res) => {
+    //     this.isLoading = false;
+    //     this.router.navigate(['/recipes']);
+    //   },
+    //   (errorMessage) => {
+    //     this.isLoading = false;
+    //     this.showErrorAlert(errorMessage);
+    //     this.error = errorMessage;
+    //   }
+    // );
     form.reset();
   }
   ngOnDestroy() {

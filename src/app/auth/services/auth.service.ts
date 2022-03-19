@@ -4,14 +4,16 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, catchError, tap, throwError } from 'rxjs';
 import AuthResponseInterface from '../interface/auth.response.interface';
 import { User } from '../models/user.model';
-
+import * as fromApp from '../../store/app.reducer'
+import {Store} from "@ngrx/store";
+import * as AuthActions from '../store/auth.actions'
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  user = new BehaviorSubject<User>(null);
+  // user = new BehaviorSubject<User>(null);
   private experissonTimeOut: any;
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router,private store:Store<fromApp.AppState>) {}
   // signInWithPassword?key=[API_KEY]
   // signUp?key=[API_KEY]
 
@@ -66,14 +68,15 @@ export class AuthService {
       new Date(userData._taskFactories)
     );
     if (loadedUser.token) {
-      this.user.next(loadedUser);
-      const timeExp =
-        new Date(userData._taskFactories).getTime() - new Date().getTime();
+      // this.user.next(loadedUser);
+      this.store.dispatch(new AuthActions.Login({email:userData.email,userId:userData.id,token:userData._token,expireDate:new Date(userData._taskFactories)}));
+      const timeExp = new Date(userData._taskFactories).getTime() - new Date().getTime();
       this.autoLogout(timeExp);
     }
   }
   logout() {
-    this.user.next(null);
+    // this.user.next(null);
+    this.store.dispatch(new AuthActions.Logout());
     this.router.navigate(['/auth']);
     localStorage.removeItem('userData');
     if (this.experissonTimeOut) {
@@ -118,7 +121,8 @@ export class AuthService {
   ) {
     const expireDate = new Date(new Date().getTime() + +expiresIn * 1000);
     const user = new User(email, localId, idToken, expireDate);
-    this.user.next(user);
+    this.store.dispatch(new AuthActions.Login({email:email,userId:localId,token:idToken,expireDate:expireDate}))
+    // this.user.next(user);
     this.autoLogout(+expiresIn * 1000);
     localStorage.setItem('userData', JSON.stringify(user));
   }

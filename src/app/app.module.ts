@@ -5,11 +5,13 @@ import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { AuthInterceptorService } from './auth/services/auth-interceptor.service';
-
 import { StoreModule } from '@ngrx/store';
 import { AuthModule } from './auth/auth.module';
-import { shoppingListReducer } from './shopping-list/store/shopping-list.reducer';
 import { SharedModule } from './shared/shared.module';
+import * as fromApp  from "./store/app.reducer";
+import {EffectsModule} from "@ngrx/effects";
+import {AuthEffects} from "./auth/store/auth.effects";
+
 @NgModule({
   declarations: [AppComponent, HeaderComponent],
   imports: [
@@ -18,7 +20,8 @@ import { SharedModule } from './shared/shared.module';
     HttpClientModule,
     AuthModule,
     SharedModule,
-    StoreModule.forRoot({ shoppingList: shoppingListReducer }),
+    StoreModule.forRoot(fromApp.appReducers),
+    EffectsModule.forRoot([AuthEffects])
   ],
   providers: [
     {

@@ -4,7 +4,9 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'https://recipes-api-6b2f9-default-rtdb.firebaseio.com/',
+  apiUrl : 'https://recipes-api-6b2f9-default-rtdb.firebaseio.com/',
+  authApiUrl : 'https://identitytoolkit.googleapis.com/v1/accounts',
+  fireBaseKey:'AIzaSyBvNC5O91Zt6XpBHgxovpyPwHv7lCmfmM4'
 };
 
 /*
